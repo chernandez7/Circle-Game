@@ -1,15 +1,17 @@
 from graphics import *
 
+# Checks if point is between two other points
 def isBetween(x, end1, end2):
     return end1 <= x <= end2 or end2 <= x <= end1
 
-
+# Checks if point is inside a rectangle (button)
 def isInside(point, rect):
     pt1 = rect.getP1()
     pt2 = rect.getP2()
     return isBetween(point.getX(), pt1.getX(), pt2.getX()) and \
            isBetween(point.getY(), pt1.getY(), pt2.getY())
 
+# Creates rectangle
 def makeColoredRect(corner, width, height, color, win):
     corner2 = corner.clone()  
     corner2.move(width, -height)
@@ -18,44 +20,37 @@ def makeColoredRect(corner, width, height, color, win):
     rect.draw(win)
     return rect
 
+# Create and draw text
+def makeText(x, y, text, window):
+    text = Text(Point(x, y), text)
+    text.draw(window)
+    
 
-
+# Main Start
 def main():
-    win = GraphWin('Find the Hole', 400, 400)
+    # Creation of window
+    win = GraphWin('Find the Circle', 400, 400)
     win.yUp()
 
+    # Buttons
     greenButton = makeColoredRect(Point(75, 320), 80, 30, 'green', win)
     yellowButton = makeColoredRect(Point(75, 280), 80, 30, 'yellow', win)
     redButton = makeColoredRect(Point(75, 240), 80, 30, 'red', win)
     purpbutt  =makeColoredRect(Point(75, 200), 80, 30, 'purple', win)
 
-    text3= Text(Point(118,305), "Level 1")
-    text4= Text(Point(118,265), "Level 2")
-    text5= Text(Point(118,225), "Level 3")
-    text6= Text(Point(118,185), "Level 4")
-    text7= Text(Point(200,385), "Find the Hole!")
-    text33= Text(Point(235,305), "Number of tries: 20")
-    text44= Text(Point(235,265), "Number of tries: 15")
-    text55= Text(Point(235,225), "Number of tries: 10")
-    text66= Text(Point(230,185), "Number of tries: 5")
-    
-    
-    text8= Text(Point(210,45), "A game by Morgan Rose and Chris Hernandez")
-    
-    text3.draw(win)
-    text4.draw(win)
-    text5.draw(win)
-    text6.draw(win)
-    text7.draw(win)
-    text33.draw(win)
-    text44.draw(win)
-    text55.draw(win)
-    text66.draw(win)
-    
-    text8.draw(win)
+    # Text on screen
+    makeText(118, 305, "Level 1", win)
+    makeText(118, 265, "Level 2", win)
+    makeText(118, 225, "Level 3", win)
+    makeText(118, 185, "Level 4", win)
+    makeText(200, 385, "Find the Circle!", win)
+    makeText(235, 305, "Number of tries: 20", win)
+    makeText(235, 265, "Number of tries: 15", win)
+    makeText(235, 225, "Number of tries: 10", win)
+    makeText(230, 185, "Number of tries: 5", win)
+    makeText(210, 45, "A game by Christopher Hernandez and Morgan Rose", win)
+    makeText(win.getWidth() / 2, 360, "Click to choose a level difficulty", win)
 
-    msg = Text(Point(win.getWidth()/2, 360),'Click to choose a level difficulty')
-    msg.draw(win)
     pt = win.getMouse()
     win.close()
     
@@ -148,5 +143,6 @@ def level(radius, clickLimit):
             main()
         else:
             win.close()
-
+            
+# Main Execution
 main()
