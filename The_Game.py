@@ -1,4 +1,5 @@
 from graphics import *
+import random, time
 
 # Checks if point is between two other points
 def isBetween(x, end1, end2):
@@ -24,7 +25,69 @@ def makeColoredRect(corner, width, height, color, win):
 def makeText(x, y, text, window):
     text = Text(Point(x, y), text)
     text.draw(window)
+
+# Gets difference of two points
+def getShift(point1, point2): 
+    dx = point2.getX() - point1.getX()
+    dy = point2.getY() - point1.getY()
+    return (dx*dx + dy*dy)**.5
+
+# Changes outline of shape to a color
+def setOutline(self, color):
+        self._reconfig("outline", color)
+
+# Level depending on difficulty
+def level(radius, clickLimit):
+    # Define new window
+    gameWin = GraphWin ("Find the Hole", 500, 500)
+    gameWin.yUp()
+    makeText(gameWin.getWidth() / 2, 30, "Click to find the Circle", gameWin)
+    gameWin.getMouse()
+
+    # Create circle at random position
+    x = random.randrange(0 + radius, 500 - radius)
+    y = random.randrange(0 + radius, 500 - radius)
+    center = Point(x,y)
+    circle = Circle(center, radius)
+    user = gameWin.getMouse()
     
+    clickCount = 0
+    # Not in circle and under click count max
+    while getShift(user,center) > radius and clickCount < clickLimit:
+            clickCount += 1
+            user.draw(gameWin)
+            user = gameWin.getMouse()
+
+    # If clicked inside circle
+    if getShift(user,center) < radius:
+        circle.setFill('green')
+        makeText(420, 60, 'Level Complete!', gameWin)
+        setOutline(circle, "black")
+        circle.setFill('green')
+        circle.draw(gameWin)
+        reButton = makeColoredRect(Point(375, 45), 90, 40, 'yellow', gameWin)
+        makeText(420, 25, "Replay?", gameWin)
+        pt = gameWin.getMouse()
+        gameWin.close()
+
+        # Restart
+        if isInside(pt, reButton):
+            main()
+            
+    # If out of turns
+    else:
+        setOutline(circle, "black")
+        circle.setFill('red')
+        circle.draw(gameWin)
+        makeText(420, 60, "You Lose", gameWin)
+        reButton = makeColoredRect(Point(375, 45), 90, 40, 'yellow', gameWin)
+        makeText(420, 25, "Replay?", gameWin)
+        pt = gameWin.getMouse()
+        gameWin.close()
+        if isInside(pt, reButton):
+            main()
+        else:
+            gameWin.close()
 
 # Main Start
 def main():
@@ -36,7 +99,7 @@ def main():
     greenButton = makeColoredRect(Point(75, 320), 80, 30, 'green', win)
     yellowButton = makeColoredRect(Point(75, 280), 80, 30, 'yellow', win)
     redButton = makeColoredRect(Point(75, 240), 80, 30, 'red', win)
-    purpbutt  =makeColoredRect(Point(75, 200), 80, 30, 'purple', win)
+    purpleButton  =makeColoredRect(Point(75, 200), 80, 30, 'purple', win)
 
     # Text on screen
     makeText(118, 305, "Level 1", win)
@@ -50,99 +113,25 @@ def main():
     makeText(230, 185, "Number of tries: 5", win)
     makeText(210, 45, "A game by Christopher Hernandez and Morgan Rose", win)
     makeText(win.getWidth() / 2, 360, "Click to choose a level difficulty", win)
+    makeText(win.getWidth() / 2, 340, "Click anywhere else to close", win)
 
+    # Get coordinate of mouse click
     pt = win.getMouse()
     win.close()
-    
+
+    # Starts game depending on difficulty
     if isInside(pt, greenButton):
         level(65,20)
+        win.close()
     elif isInside(pt, yellowButton):
         level(45,15)
+        win.close()
     elif isInside(pt, redButton):
         level(20,10)
-    elif isInside(pt, purpbutt):
+        win.close()
+    elif isInside(pt, purpleButton):
         level(5,5)
-
-from graphics import*
-import random, time
-
-def getShift(point1, point2): 
-    dx = point2.getX() - point1.getX()
-    dy = point2.getY() - point1.getY()
-    return (dx*dx + dy*dy)**.5
-
-def setOutline(self, color):
-        self._reconfig("outline", color)
-
-def level(radius, clickLimit):
-    
-    
-    win= GraphWin ("Find the Hole", 500, 500)
-    text= Text(Point(win.getWidth()/2,30), "Click to find the Circle; Click to Close")
-    text.draw(win)
-    win.yUp()
-    win.getMouse()
-    text.undraw()
-    
-    
-                   
-    x = random.randrange(5, 495)
-    y = random.randrange(5, 495)
-    center=Point(x,y)
-    
-
-    circle= Circle(center, radius)
-    
-    circle.draw(win)
-    setOutline(circle, "")
-    
-    user = win.getMouse()
-    
-    
-    
-    clickCount=0
-    
-     
-    
-    while getShift(user,center) > radius and clickCount<clickLimit:
-        
-            clickCount+=1
-            user.draw(win)
-            user = win.getMouse()
-
-            
-    if getShift(user,center) < radius:
-        
-            
-        circle.setFill('green')
-        text2= Text(Point(win.getWidth()/2,30), 'Level Complete!')
-        text2.draw(win)
-        
-        reButton = makeColoredRect(Point(375, 45), 90, 40, 'yellow', win)
-        retext= Text(Point(420,25), "Replay?")
-        retext.draw(win)
-        pt = win.getMouse()
         win.close()
-        if isInside(pt, reButton):
-            main()
-        else:
-            win.close()
-        
-
-    else:
-        setOutline(circle, "black")
-        circle.setFill('red')
-        text747= Text(Point(win.getWidth()/2,30), "You Lose")
-        text747.draw(win)
-        reButton = makeColoredRect(Point(375, 45), 90, 40, 'yellow', win)
-        retext= Text(Point(420,25), "Replay?")
-        retext.draw(win)
-        pt = win.getMouse()
-        win.close()
-        if isInside(pt, reButton):
-            main()
-        else:
-            win.close()
             
 # Main Execution
 main()
